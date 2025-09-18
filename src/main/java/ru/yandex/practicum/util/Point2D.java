@@ -1,4 +1,4 @@
-package ru.yandex.practicum.client;
+package ru.yandex.practicum.util;
 
 public class Point2D {
     private final double x;

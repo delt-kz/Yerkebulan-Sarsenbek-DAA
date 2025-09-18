@@ -1,13 +1,17 @@
 package ru.yandex.practicum.algorithm;
 
+
+import ru.yandex.practicum.util.Metrics;
 import ru.yandex.practicum.util.ArrayUtils;
 
 import java.util.Random;
 
 public class QuickSort {
+    private final Metrics metrics;
     private final Random random;
 
-    public QuickSort() {
+    public QuickSort(Metrics metrics) {
+        this.metrics = metrics;
         this.random = new Random();
     }
 
@@ -17,6 +21,7 @@ public class QuickSort {
     }
 
     private void sort(int[] array, int left, int right) {
+        metrics.recordRecursionDepth();
 
         while (left < right) {
             if (right - left < 16) {
@@ -45,6 +50,7 @@ public class QuickSort {
         int i = left - 1;
 
         for (int j = left; j < right; j++) {
+            metrics.incrementComparisons(1);
             if (array[j] <= pivot) {
                 i++;
                 ArrayUtils.swap(array, i, j);
@@ -61,7 +67,7 @@ public class QuickSort {
             int j = i - 1;
 
             while (j >= left && array[j] > key) {
-
+                metrics.incrementComparisons(1);
                 array[j + 1] = array[j];
                 j--;
             }

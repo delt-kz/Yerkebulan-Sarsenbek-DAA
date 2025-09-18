@@ -1,13 +1,17 @@
 package ru.yandex.practicum.algorithm;
 
-
-import ru.yandex.practicum.client.Point2D;
+import ru.yandex.practicum.util.Metrics;
+import ru.yandex.practicum.util.Point2D;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class ClosestPair {
+    private final Metrics metrics;
 
+    public ClosestPair(Metrics metrics) {
+        this.metrics = metrics;
+    }
 
     public double findClosestPair(Point2D[] points) {
         if (points == null || points.length < 2) {
@@ -24,6 +28,8 @@ public class ClosestPair {
     }
 
     private double closestPair(Point2D[] pointsByX, Point2D[] pointsByY, int left, int right) {
+        metrics.recordRecursionDepth();
+
         int n = right - left + 1;
 
         if (n <= 3) {
@@ -59,6 +65,7 @@ public class ClosestPair {
         for (int i = left; i <= right; i++) {
             for (int j = i + 1; j <= right; j++) {
                 double distance = points[i].distanceTo(points[j]);
+                metrics.incrementComparisons(1);
                 minDistance = Math.min(minDistance, distance);
             }
         }
@@ -72,6 +79,7 @@ public class ClosestPair {
         for (int i = 0; i < size; i++) {
             for (int j = i + 1; j < size && (strip[j].getY() - strip[i].getY()) < min; j++) {
                 double distance = strip[i].distanceTo(strip[j]);
+                metrics.incrementComparisons(1);
                 min = Math.min(min, distance);
             }
         }
