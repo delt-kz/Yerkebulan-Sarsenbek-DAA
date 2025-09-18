@@ -1,13 +1,17 @@
 package ru.yandex.practicum.algorithm;
 
-
 import ru.yandex.practicum.util.ArrayUtils;
+import ru.yandex.practicum.util.Metrics;
 
 import java.util.Arrays;
 
 public class DeterministicSelect {
+    private final Metrics metrics;
     private static final int GROUP_SIZE = 5;
 
+    public DeterministicSelect(Metrics metrics) {
+        this.metrics = metrics;
+    }
 
     public int select(int[] array, int k) {
         if (array == null || array.length == 0) {
@@ -22,6 +26,7 @@ public class DeterministicSelect {
     }
 
     private int select(int[] array, int left, int right, int k) {
+        metrics.recordRecursionDepth();
 
         if (left == right) {
             return array[left];
@@ -65,6 +70,7 @@ public class DeterministicSelect {
         int i = left - 1;
 
         for (int j = left; j < right; j++) {
+            metrics.incrementComparisons(1);
             if (array[j] <= pivot) {
                 i++;
                 ArrayUtils.swap(array, i, j);

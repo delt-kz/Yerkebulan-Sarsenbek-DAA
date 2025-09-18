@@ -1,9 +1,16 @@
 package ru.yandex.practicum.algorithm;
 
 
+import ru.yandex.practicum.util.Metrics;
+
+
 public class MergeSort {
     private static final int INSERTION_CUTOFF = 16;
+    private final Metrics metrics;
 
+    public MergeSort(Metrics metrics) {
+        this.metrics = metrics;
+    }
 
     public void sort(int[] array) {
         if (array == null || array.length <= 1) return;
@@ -12,6 +19,7 @@ public class MergeSort {
     }
 
     private void sort(int[] array, int left, int right, int[] buffer) {
+        metrics.recordRecursionDepth();
 
         if (right - left + 1 <= INSERTION_CUTOFF) {
             insertionSort(array, left, right);
@@ -25,11 +33,14 @@ public class MergeSort {
     }
 
     private void merge(int[] array, int left, int mid, int right, int[] buffer) {
+        metrics.incrementComparisons(right - left);
+        metrics.incrementAllocations(right - left + 1);
 
         System.arraycopy(array, left, buffer, left, right - left + 1);
 
         int i = left, j = mid + 1, k = left;
         while (i <= mid && j <= right) {
+            metrics.incrementComparisons(1);
             if (buffer[i] <= buffer[j]) {
                 array[k++] = buffer[i++];
             } else {
@@ -51,6 +62,7 @@ public class MergeSort {
             int j = i - 1;
 
             while (j >= left && array[j] > key) {
+                metrics.incrementComparisons(1);
                 array[j + 1] = array[j];
                 j--;
             }
