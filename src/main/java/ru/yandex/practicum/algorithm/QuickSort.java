@@ -21,24 +21,27 @@ public class QuickSort {
     }
 
     private void sort(int[] array, int left, int right) {
-        metrics.recordRecursionDepth();
+        metrics.enterRecursion();
+        try {
+            while (left < right) {
+                if (right - left < 16) {
+                    insertionSort(array, left, right);
+                    return;
+                }
 
-        while (left < right) {
-            if (right - left < 16) {
-                insertionSort(array, left, right);
-                return;
+                int pivotIndex = partition(array, left, right);
+
+                // Recurse on smaller partition, iterate on larger
+                if (pivotIndex - left < right - pivotIndex) {
+                    sort(array, left, pivotIndex - 1);
+                    left = pivotIndex + 1;
+                } else {
+                    sort(array, pivotIndex + 1, right);
+                    right = pivotIndex - 1;
+                }
             }
-
-            int pivotIndex = partition(array, left, right);
-
-            // Recurse on smaller partition, iterate on larger
-            if (pivotIndex - left < right - pivotIndex) {
-                sort(array, left, pivotIndex - 1);
-                left = pivotIndex + 1;
-            } else {
-                sort(array, pivotIndex + 1, right);
-                right = pivotIndex - 1;
-            }
+        } finally {
+            metrics.exitRecursion();
         }
     }
 

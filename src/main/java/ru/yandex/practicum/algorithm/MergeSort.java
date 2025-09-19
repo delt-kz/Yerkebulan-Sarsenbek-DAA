@@ -19,19 +19,21 @@ public class MergeSort {
     }
 
     private void sort(int[] array, int left, int right, int[] buffer) {
-        metrics.recordRecursionDepth();
+        metrics.enterRecursion();
+        try {
+            if (right - left + 1 <= INSERTION_CUTOFF) {
+                insertionSort(array, left, right);
+                return;
+            }
 
-        if (right - left + 1 <= INSERTION_CUTOFF) {
-            insertionSort(array, left, right);
-            return;
+            int mid = left + (right - left) / 2;
+            sort(array, left, mid, buffer);
+            sort(array, mid + 1, right, buffer);
+            merge(array, left, mid, right, buffer);
+        } finally {
+            metrics.exitRecursion();
         }
-
-        int mid = left + (right - left) / 2;
-        sort(array, left, mid, buffer);
-        sort(array, mid + 1, right, buffer);
-        merge(array, left, mid, right, buffer);
     }
-
     private void merge(int[] array, int left, int mid, int right, int[] buffer) {
         metrics.incrementComparisons(right - left);
         metrics.incrementAllocations(right - left + 1);

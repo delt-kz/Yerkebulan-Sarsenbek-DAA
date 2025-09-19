@@ -1,5 +1,6 @@
 package ru.yandex.practicum.algorithm;
 
+
 import ru.yandex.practicum.util.ArrayUtils;
 import ru.yandex.practicum.util.Metrics;
 
@@ -26,27 +27,30 @@ public class DeterministicSelect {
     }
 
     private int select(int[] array, int left, int right, int k) {
-        metrics.recordRecursionDepth();
+        metrics.enterRecursion();
+        try {
+            if (left == right) {
+                return array[left];
+            }
 
-        if (left == right) {
-            return array[left];
-        }
+            int pivotIndex = medianOfMedians(array, left, right);
+            pivotIndex = partition(array, left, right, pivotIndex);
 
-        int pivotIndex = medianOfMedians(array, left, right);
-        pivotIndex = partition(array, left, right, pivotIndex);
-
-        if (k == pivotIndex) {
-            return array[k];
-        } else if (k < pivotIndex) {
-            return select(array, left, pivotIndex - 1, k);
-        } else {
-            return select(array, pivotIndex + 1, right, k);
+            if (k == pivotIndex) {
+                return array[k];
+            } else if (k < pivotIndex) {
+                return select(array, left, pivotIndex - 1, k);
+            } else {
+                return select(array, pivotIndex + 1, right, k);
+            }
+        } finally {
+            metrics.exitRecursion();
         }
     }
 
     private int medianOfMedians(int[] array, int left, int right) {
         int n = right - left + 1;
-        int numGroups = (n + GROUP_SIZE - 1) / GROUP_SIZE;
+        int numGroups = (int) Math.ceil(n / (double) GROUP_SIZE);
         int[] medians = new int[numGroups];
 
         for (int i = 0; i < numGroups; i++) {
@@ -55,13 +59,27 @@ public class DeterministicSelect {
             medians[i] = findMedian(array, groupLeft, groupRight);
         }
 
-        return select(medians, 0, medians.length - 1, medians.length / 2);
+        if (medians.length == 1) {
+            return findMedianIndex(array, left, right, medians[0]);
+        } else {
+            int medianOfMediansValue = select(medians, 0, medians.length - 1, medians.length / 2);
+            return findMedianIndex(array, left, right, medianOfMediansValue);
+        }
     }
 
     private int findMedian(int[] array, int left, int right) {
         int[] group = Arrays.copyOfRange(array, left, right + 1);
         Arrays.sort(group);
         return group[group.length / 2];
+    }
+
+    private int findMedianIndex(int[] array, int left, int right, int medianValue) {
+        for (int i = left; i <= right; i++) {
+            if (array[i] == medianValue) {
+                return i;
+            }
+        }
+        return left;
     }
 
     private int partition(int[] array, int left, int right, int pivotIndex) {

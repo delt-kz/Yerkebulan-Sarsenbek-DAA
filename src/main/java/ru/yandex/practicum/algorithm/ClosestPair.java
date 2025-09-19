@@ -19,44 +19,62 @@ public class ClosestPair {
         }
 
         Point2D[] pointsByX = points.clone();
-        Arrays.sort(pointsByX, Comparator.comparingDouble(Point2D::getX));
+        Arrays.sort(pointsByX, Comparator.comparingDouble(Point2D::getX).thenComparingDouble(Point2D::getY));
 
         Point2D[] pointsByY = points.clone();
-        Arrays.sort(pointsByY, Comparator.comparingDouble(Point2D::getY));
+        Arrays.sort(pointsByY, Comparator.comparingDouble(Point2D::getY).thenComparingDouble(Point2D::getX));
 
         return closestPair(pointsByX, pointsByY, 0, points.length - 1);
     }
 
     private double closestPair(Point2D[] pointsByX, Point2D[] pointsByY, int left, int right) {
-        metrics.recordRecursionDepth();
+        metrics.enterRecursion();
+        try {
+            int n = right - left + 1;
 
-        int n = right - left + 1;
-
-        if (n <= 3) {
-            return bruteForce(pointsByX, left, right);
-        }
-
-        int mid = left + (right - left) / 2;
-        Point2D midPoint = pointsByX[mid];
-
-        Point2D[] leftY = Arrays.copyOfRange(pointsByY, left, mid + 1);
-        Point2D[] rightY = Arrays.copyOfRange(pointsByY, mid + 1, right + 1);
-
-        double leftMin = closestPair(pointsByX, leftY, left, mid);
-        double rightMin = closestPair(pointsByX, rightY, mid + 1, right);
-        double minDistance = Math.min(leftMin, rightMin);
-
-        Point2D[] strip = new Point2D[n];
-        int stripSize = 0;
-
-        for (int i = left; i <= right; i++) {
-            if (Math.abs(pointsByY[i].getX() - midPoint.getX()) < minDistance) {
-                strip[stripSize++] = pointsByY[i];
+            if (n <= 3) {
+                return bruteForce(pointsByX, left, right);
             }
-        }
 
-        double stripMin = stripClosest(strip, stripSize, minDistance);
-        return Math.min(minDistance, stripMin);
+            int mid = left + (right - left) / 2;
+            Point2D midPoint = pointsByX[mid];
+
+            // Split pointsByY into left and right halves based on x-coordinate comparison
+            Point2D[] leftY = new Point2D[mid - left + 1];
+            Point2D[] rightY = new Point2D[right - mid];
+            int leftIdx = 0, rightIdx = 0;
+
+            for (Point2D point : pointsByY) {
+                if (point.getX() < midPoint.getX() ||
+                        (point.getX() == midPoint.getX() && point.getY() <= midPoint.getY())) {
+                    if (leftIdx < leftY.length) {
+                        leftY[leftIdx++] = point;
+                    }
+                } else {
+                    if (rightIdx < rightY.length) {
+                        rightY[rightIdx++] = point;
+                    }
+                }
+            }
+
+            double leftMin = closestPair(pointsByX, leftY, left, mid);
+            double rightMin = closestPair(pointsByX, rightY, mid + 1, right);
+            double minDistance = Math.min(leftMin, rightMin);
+
+            // Build strip of points close to the vertical line
+            Point2D[] strip = new Point2D[n];
+            int stripSize = 0;
+            for (Point2D point : pointsByY) {
+                if (Math.abs(point.getX() - midPoint.getX()) < minDistance) {
+                    strip[stripSize++] = point;
+                }
+            }
+
+            double stripMin = stripClosest(strip, stripSize, minDistance);
+            return Math.min(minDistance, stripMin);
+        } finally {
+            metrics.exitRecursion();
+        }
     }
 
     private double bruteForce(Point2D[] points, int left, int right) {

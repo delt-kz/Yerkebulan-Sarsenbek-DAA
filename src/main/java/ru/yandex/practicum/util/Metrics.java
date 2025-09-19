@@ -1,9 +1,5 @@
 package ru.yandex.practicum.util;
 
-import lombok.Data;
-
-
-@Data
 public class Metrics {
     private int comparisons;
     private int allocations;
@@ -18,7 +14,7 @@ public class Metrics {
         allocations += count;
     }
 
-    public void recordRecursionDepth() {
+    public void enterRecursion() {
         currentRecursionDepth++;
         maxRecursionDepth = Math.max(maxRecursionDepth, currentRecursionDepth);
     }
@@ -27,6 +23,11 @@ public class Metrics {
         currentRecursionDepth--;
     }
 
+    // Getters and reset methods
+    public int getComparisons() { return comparisons; }
+    public int getAllocations() { return allocations; }
+    public int getMaxRecursionDepth() { return maxRecursionDepth; }
+    public int getCurrentRecursionDepth() { return currentRecursionDepth; }
 
     public void reset() {
         comparisons = 0;
