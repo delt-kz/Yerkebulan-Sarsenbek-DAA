@@ -31,7 +31,7 @@ public class QuickSort {
 
                 int pivotIndex = partition(array, left, right);
 
-                // Recurse on smaller partition, iterate on larger
+
                 if (pivotIndex - left < right - pivotIndex) {
                     sort(array, left, pivotIndex - 1);
                     left = pivotIndex + 1;

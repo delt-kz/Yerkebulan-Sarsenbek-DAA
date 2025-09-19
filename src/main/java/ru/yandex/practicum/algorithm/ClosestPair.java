@@ -39,7 +39,6 @@ public class ClosestPair {
             int mid = left + (right - left) / 2;
             Point2D midPoint = pointsByX[mid];
 
-            // Split pointsByY into left and right halves based on x-coordinate comparison
             Point2D[] leftY = new Point2D[mid - left + 1];
             Point2D[] rightY = new Point2D[right - mid];
             int leftIdx = 0, rightIdx = 0;
@@ -61,7 +60,6 @@ public class ClosestPair {
             double rightMin = closestPair(pointsByX, rightY, mid + 1, right);
             double minDistance = Math.min(leftMin, rightMin);
 
-            // Build strip of points close to the vertical line
             Point2D[] strip = new Point2D[n];
             int stripSize = 0;
             for (Point2D point : pointsByY) {

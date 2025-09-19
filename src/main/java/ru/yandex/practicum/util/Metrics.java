@@ -23,7 +23,6 @@ public class Metrics {
         currentRecursionDepth--;
     }
 
-    // Getters and reset methods
     public int getComparisons() { return comparisons; }
     public int getAllocations() { return allocations; }
     public int getMaxRecursionDepth() { return maxRecursionDepth; }
