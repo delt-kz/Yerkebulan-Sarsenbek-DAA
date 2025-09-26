@@ -93,7 +93,7 @@ class ClosestPairTest {
                 new Point2D(2, 2),
                 new Point2D(3, 3)
         };
-        double expected = 0.0; // Distance between duplicate points
+        double expected = 0.0;
         double actual = closestPair.findClosestPair(points);
         assertEquals(expected, actual, 1e-10);
     }

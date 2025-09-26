@@ -1,10 +1,29 @@
 package ru.yandex.practicum.util;
 
+import lombok.Data;
+
+import java.util.concurrent.TimeUnit;
+
+@Data
 public class Metrics {
     private int comparisons;
     private int allocations;
     private int maxRecursionDepth;
     private int currentRecursionDepth;
+    private long startTime;
+    private long endTime;
+
+    public void startTimer() {
+        startTime = System.nanoTime();
+    }
+
+    public void stopTimer() {
+        endTime = System.nanoTime();
+    }
+
+    public long getElapsedTime(TimeUnit unit) {
+        return unit.convert(endTime - startTime, TimeUnit.NANOSECONDS);
+    }
 
     public void incrementComparisons(int count) {
         comparisons += count;
@@ -23,15 +42,12 @@ public class Metrics {
         currentRecursionDepth--;
     }
 
-    public int getComparisons() { return comparisons; }
-    public int getAllocations() { return allocations; }
-    public int getMaxRecursionDepth() { return maxRecursionDepth; }
-    public int getCurrentRecursionDepth() { return currentRecursionDepth; }
-
     public void reset() {
         comparisons = 0;
         allocations = 0;
         maxRecursionDepth = 0;
         currentRecursionDepth = 0;
+        startTime = 0;
+        endTime = 0;
     }
 }
