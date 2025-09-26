@@ -36,8 +36,6 @@ public class MergeSort {
     }
     private void merge(int[] array, int left, int mid, int right, int[] buffer) {
         metrics.incrementComparisons(right - left);
-        metrics.incrementAllocations(right - left + 1);
-
         System.arraycopy(array, left, buffer, left, right - left + 1);
 
         int i = left, j = mid + 1, k = left;

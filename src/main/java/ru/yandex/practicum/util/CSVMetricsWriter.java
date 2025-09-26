@@ -13,19 +13,17 @@ public class CSVMetricsWriter {
         this.filename = filename;
         this.data = new ArrayList<>();
         data.add(new String[]{
-                "Algorithm", "Size", "Time(ns)", "Comparisons",
-                "Allocations", "MaxRecursionDepth", "Description"
+                "Algorithm", "Size", "Time(ns)", "Comparisons", "MaxRecursionDepth", "Description"
         });
     }
 
     public void addRecord(String algorithm, int size, long timeNs,
-                          int comparisons, int allocations, int maxDepth, String description) {
+                          int comparisons, int maxDepth, String description) {
         data.add(new String[]{
                 algorithm,
                 String.valueOf(size),
                 String.valueOf(timeNs),
                 String.valueOf(comparisons),
-                String.valueOf(allocations),
                 String.valueOf(maxDepth),
                 description
         });

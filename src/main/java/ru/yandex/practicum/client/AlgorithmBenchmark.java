@@ -51,7 +51,6 @@ public class AlgorithmBenchmark {
                 "MergeSort", size,
                 metrics.getElapsedTime(TimeUnit.NANOSECONDS),
                 metrics.getComparisons(),
-                metrics.getAllocations(),
                 metrics.getMaxRecursionDepth(),
                 "Random array"
         );
@@ -70,7 +69,6 @@ public class AlgorithmBenchmark {
                 "QuickSort", size,
                 metrics.getElapsedTime(TimeUnit.NANOSECONDS),
                 metrics.getComparisons(),
-                metrics.getAllocations(),
                 metrics.getMaxRecursionDepth(),
                 "Random array"
         );
@@ -91,7 +89,6 @@ public class AlgorithmBenchmark {
                 "DeterministicSelect", size,
                 metrics.getElapsedTime(TimeUnit.NANOSECONDS),
                 metrics.getComparisons(),
-                metrics.getAllocations(),
                 metrics.getMaxRecursionDepth(),
                 "Median selection"
         );
@@ -110,7 +107,6 @@ public class AlgorithmBenchmark {
                 "ClosestPair", size,
                 metrics.getElapsedTime(TimeUnit.NANOSECONDS),
                 metrics.getComparisons(),
-                metrics.getAllocations(),
                 metrics.getMaxRecursionDepth(),
                 "Random points"
         );
@@ -136,7 +132,7 @@ public class AlgorithmBenchmark {
         try {
             AlgorithmBenchmark benchmark = new AlgorithmBenchmark("algorithm_metrics.csv");
             benchmark.runBenchmarks();
-            System.out.println("Benchmark completed. Results saved to algorithm_metrics.csv");
+            System.out.println("saved to algorithm_metrics.csv");
         } catch (Exception e) {
             e.printStackTrace();
         }

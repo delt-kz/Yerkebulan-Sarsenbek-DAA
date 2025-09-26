@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class Metrics {
     private int comparisons;
-    private int allocations;
     private int maxRecursionDepth;
     private int currentRecursionDepth;
     private long startTime;
@@ -29,10 +28,6 @@ public class Metrics {
         comparisons += count;
     }
 
-    public void incrementAllocations(int count) {
-        allocations += count;
-    }
-
     public void enterRecursion() {
         currentRecursionDepth++;
         maxRecursionDepth = Math.max(maxRecursionDepth, currentRecursionDepth);
@@ -44,7 +39,6 @@ public class Metrics {
 
     public void reset() {
         comparisons = 0;
-        allocations = 0;
         maxRecursionDepth = 0;
         currentRecursionDepth = 0;
         startTime = 0;
