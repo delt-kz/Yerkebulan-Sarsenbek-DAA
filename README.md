@@ -44,49 +44,41 @@
 
 ---
 
-## 🚀 Performance Measurements
+## 📊 Experimental Results with Plots
 
-### Time vs Input Size
-| n        | MergeSort (ms) | QuickSort (ms) | Select (ms) | Closest Pair (ms) |
-|----------|----------------|----------------|-------------|-------------------|
-| 1,000    | 0.45           | 0.32           | 1.20        | 0.89              |
-| 10,000   | 5.10           | 3.85           | 12.50       | 10.20             |
-| 100,000  | 58.30          | 44.10          | 145.60      | 115.80            |
-| 1,000,000| 620.15         | 480.25         | 1600.45     | 1250.30           |
+The benchmarks can be executed from  
+`src/main/java/ru/yandex/practicum/client/AlgorithmBenchmark.java`.  
+Results are written to `algorithm_metrics.csv` and can then be visualized.
+
+### ⏱️ Time vs Input Size
+The following plot shows execution time (in nanoseconds) versus input size.  
+Logarithmic scales are used for both axes to highlight growth trends.
+
+![Time vs n](src/main/resources/graph/timeToN.png)
 
 **Observations:**
-- QuickSort ~20–25% faster than MergeSort (cache locality).
-- Deterministic Select = 2.5–3× overhead vs sorting-based selection.
-- Closest Pair scales like MergeSort.
+- **QuickSort** consistently outperforms MergeSort for large inputs due to better cache locality.
+- **MergeSort** is slower, mainly because of buffer copying overhead.
+- **Deterministic Select** and **Closest Pair** have much higher constant factors, despite good asymptotic bounds.
 
 ---
 
-### Recursion Depth vs Input Size
-| n        | MergeSort | QuickSort | Select | Closest Pair |
-|----------|-----------|-----------|--------|--------------|
-| 1,000    | 10        | 18        | 8      | 10           |
-| 10,000   | 14        | 26        | 11     | 14           |
-| 100,000  | 17        | 33        | 14     | 17           |
-| 1,000,000| 20        | 39        | 17     | 20           |
+### 🌀 Recursion Depth vs Input Size
+The recursion depth across input sizes is shown below:
+
+![Recursion Depth vs n](src/main/resources/graph/recursionToDepth.png)
 
 **Observations:**
-- MergeSort & Closest Pair → clean ⌈log₂n⌉ depth.
-- QuickSort depth ≈ 2log₂n (smaller-first recursion).
-- Select grows slower (aggressive partitioning).
+- **MergeSort** follows the expected ⌈log₂n⌉ depth.
+- **QuickSort** maintains logarithmic stack usage but at a slightly lower level than MergeSort.
+- **Deterministic Select** and **Closest Pair** also grow logarithmically, but with larger constants.
 
 ---
 
-## ⚡ Constant Factor Effects
-
-- **Cache Effects**:
-    - QuickSort: cache-friendly (sequential partitioning).
-    - MergeSort: cache-unfriendly (buffer copying).
-    - Closest Pair: strip scanning has good spatial locality.
-
-- **GC Impact**:
-    - MergeSort: buffer allocation = minor GC pressure.
-    - Select: median groups → allocation spikes.
-    - QuickSort: in-place, minimal GC activity.
+### ⚡ Constant-Factor Effects in Practice
+- **Cache locality** explains the gap between QuickSort and MergeSort in the time plot.
+- **Garbage Collection (GC)** pressure is visible in MergeSort (temporary arrays) and Select (median groups).
+- **Large constants** in Select and Closest Pair make them less practical than theory alone suggests.
 
 ---
 
